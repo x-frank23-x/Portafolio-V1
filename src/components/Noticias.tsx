@@ -1,26 +1,40 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'; 
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 
 const noticiasData = [
   {
     id: 1,
-    titulo: "Lanzamiento de React 19",
-    texto: "Se anunciaron nuevas características para Server Components y mejoras en el rendimiento del rendering.",
-    imagen: "https://via.placeholder.com/600x300/67e8f9/0f172a?text=React+19", // cyan-400
+    titulo: "Aprendiendo Bitbucket y control de versiones",
+    texto:
+        "Durante el trascurso de estas semanas he estado profundizando en el uso de Bitbucket, gestionando repositorios, ramas y flujos de trabajo con Git para proyectos personales.",
+    imagen:
+        "https://via.placeholder.com/600x300/67e8f9/0f172a?text=Bitbucket+y+Git",
   },
   {
     id: 2,
-    titulo: "Avances en IA y Ética",
-    texto: "Expertos debaten sobre la regulación y los desafíos éticos en el desarrollo de grandes modelos de lenguaje.",
-    imagen: "https://via.placeholder.com/600x300/c026d3/0f172a?text=IA+y+%C3%89tica", // fuchsia-700
+    titulo: "Proyecto Supersalud finalizado",
+    texto:
+        "Finalicé exitosamente el proyecto Supersalud, entregando todo los mantenimientos y inventario completo, las soluciones que se proporciono para la creacion del inventario y formateo de actas fueron del agrado del equipo del proyecto.",
+    imagen:
+        "https://via.placeholder.com/600x300/22c55e/0f172a?text=Proyecto+Supersalud",
   },
   {
     id: 3,
-    titulo: "El auge de TypeScript",
-    texto: "Un estudio revela que TypeScript es ahora el lenguaje más demandado por las startups de tecnología.",
-    imagen: "web.svg", // green-400
+    titulo: "Inicio de octavo cuatrimestre universitario",
+    texto:
+        "Inicié mi octavo cuatrimestre en la universidad, fortaleciendo mis conocimientos en desarrollo de software y consolidando mi perfil como futuro ingeniero de sfotware.",
+    imagen:
+        "https://via.placeholder.com/600x300/f59e0b/0f172a?text=8vo+Cuatrimestre",
+  },
+  {
+    id: 4,
+    titulo: "Aprendiendo Angular y explorando Linux",
+    texto:
+        "Estoy ampliando mi stack tecnológico aprendiendo Angular y explorando el uso de Linux como sistema principal para desarrollo, buscando optimizar mi flujo de trabajo.",
+    imagen:
+        "https://via.placeholder.com/600x300/9333ea/0f172a?text=Angular+y+Linux",
   },
 ];
 

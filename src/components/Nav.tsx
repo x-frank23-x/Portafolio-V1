@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Link } from "react-router-dom";
-import usePageTransition from "../hooks/usePageTransition"; // Importar el hook
+import usePageTransition from "../hooks/usePageTransition"; 
 
 const Nav = () => {
   const navRef = useRef<HTMLElement>(null);
@@ -13,7 +13,7 @@ const Nav = () => {
   const { overlayRef, showOverlay, handleTransitionClick } = usePageTransition();
 
   useEffect(() => {
-    // Animaciones iniciales (estas no cambian, se quedan aquí)
+
     if (navRef.current) {
       gsap.fromTo(
         navRef.current,
