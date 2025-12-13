@@ -10,7 +10,7 @@ const noticiasData = [
     texto:
         "Durante el trascurso de estas semanas he estado profundizando en el uso de Bitbucket, gestionando repositorios, ramas y flujos de trabajo con Git para proyectos personales.",
     imagen:
-        "https://via.placeholder.com/600x300/67e8f9/0f172a?text=Bitbucket+y+Git",
+        "bit.png",
   },
   {
     id: 2,
@@ -18,7 +18,7 @@ const noticiasData = [
     texto:
         "Finalicé exitosamente el proyecto Supersalud, entregando todo los mantenimientos y inventario completo, las soluciones que se proporciono para la creacion del inventario y formateo de actas fueron del agrado del equipo del proyecto.",
     imagen:
-        "https://via.placeholder.com/600x300/22c55e/0f172a?text=Proyecto+Supersalud",
+        "super.png",
   },
   {
     id: 3,
@@ -26,7 +26,7 @@ const noticiasData = [
     texto:
         "Inicié mi octavo cuatrimestre en la universidad, fortaleciendo mis conocimientos en desarrollo de software y consolidando mi perfil como futuro ingeniero de sfotware.",
     imagen:
-        "https://via.placeholder.com/600x300/f59e0b/0f172a?text=8vo+Cuatrimestre",
+        "uni.png",
   },
   {
     id: 4,
@@ -34,7 +34,7 @@ const noticiasData = [
     texto:
         "Estoy ampliando mi stack tecnológico aprendiendo Angular y explorando el uso de Linux como sistema principal para desarrollo, buscando optimizar mi flujo de trabajo.",
     imagen:
-        "https://via.placeholder.com/600x300/9333ea/0f172a?text=Angular+y+Linux",
+        "angular.jpg",
   },
 ];
 

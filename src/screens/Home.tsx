@@ -184,7 +184,7 @@ const Home = () => {
               px-3 sm:px-4 md:px-0
             "
                     >
-                        Ingeniero de Software con experiencia en React, TypeScript y FastAPI.
+                        Developer Full Stack con experiencia en React, TypeScript y FastAPI.
                         Hábil en el desarrollo de soluciones escalables que mejoran procesos
                         empresariales.
                     </p>

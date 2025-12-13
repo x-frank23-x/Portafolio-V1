@@ -3,6 +3,11 @@ import Nav from "../components/Nav.tsx";
 import Title_1 from "../components/titles/Title_1.tsx";
 import { gsap } from "gsap";
 
+// Importa las imágenes
+import EYPImage from "/E&P.png";
+import InduracksImage from "/Induracks.png";
+import SuperImage from "/super.png";
+
 // Datos de proyectos
 const proyectosData = {
     proyectos: [
@@ -20,7 +25,7 @@ const proyectosData = {
                 "Implementación de sistema de contacto por correo electrónico",
                 "Desarrollo de la vista del cliente"
             ],
-            imagen: "/proyectos/eyp-profesionales.jpg",
+            imagen: EYPImage,
             categoria: "Web Development"
         },
         {
@@ -37,7 +42,7 @@ const proyectosData = {
                 "Implementación de catálogo de productos",
                 "Animaciones y efectos visuales para mejor experiencia"
             ],
-            imagen: "/proyectos/induracks.jpg",
+            imagen: InduracksImage,
             categoria: "Web Development"
         },
         {
@@ -54,7 +59,7 @@ const proyectosData = {
                 "Facilitación de gestión documental",
                 "Automatización de registro de información"
             ],
-            imagen: "/proyectos/supersalud-automatizacion.jpg",
+            imagen: SuperImage,
             categoria: "Automatización"
         }
     ]
@@ -102,7 +107,6 @@ const Proyects = () => {
             );
         }
 
-        // Animación de las tarjetas con stagger
         tl.fromTo(cardsRef.current,
             {
                 y: 60,
@@ -120,25 +124,27 @@ const Proyects = () => {
             1
         );
 
-        // Efecto hover para tarjetas
         cardsRef.current.forEach(card => {
             if (!card) return;
 
-            card.addEventListener("mouseenter", () => {
+            const mouseEnterHandler = () => {
                 gsap.to(card, {
                     scale: 1.05,
                     duration: 0.3,
                     ease: "power2.out"
                 });
-            });
+            };
 
-            card.addEventListener("mouseleave", () => {
+            const mouseLeaveHandler = () => {
                 gsap.to(card, {
                     scale: 1,
                     duration: 0.3,
                     ease: "power2.out"
                 });
-            });
+            };
+
+            card.addEventListener("mouseenter", mouseEnterHandler);
+            card.addEventListener("mouseleave", mouseLeaveHandler);
         });
 
         return () => {
@@ -201,7 +207,6 @@ const Proyects = () => {
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-fuchsia-500/5 to-transparent
                                 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
 
-                                    {/* Badge de categoría */}
                                     <div className="absolute top-4 right-4">
                     <span className="px-3 py-1 bg-gray-800/70 text-gray-300 rounded-full text-xs font-medium backdrop-blur-sm">
                       {proyecto.categoria}
@@ -209,33 +214,48 @@ const Proyects = () => {
                                     </div>
 
                                     <div className="relative z-10">
-                                        {/* Imagen placeholder */}
-                                        <div className="mb-4 h-48 w-full bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden">
-                                            <div className="w-full h-full bg-gradient-to-br from-fuchsia-900/20 to-purple-900/20 flex items-center justify-center">
-                                                <div className="text-center p-4">
-                                                    <div className="text-4xl mb-2">🚀</div>
-                                                    <span className="text-gray-300 text-lg font-medium">{proyecto.empresa}</span>
-                                                </div>
+                                        {/* IMAGEN REAL - Reemplaza el placeholder */}
+                                        <div className="mb-4 h-48 w-full rounded-xl overflow-hidden relative">
+                                            <img
+                                                src={proyecto.imagen}
+                                                alt={proyecto.empresa}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                                onError={(e) => {
+                                                    console.error(`Error cargando imagen: ${proyecto.empresa}`);
+                                                    e.currentTarget.style.display = 'none';
+                                                    // Fallback si la imagen falla
+                                                    const parent = e.currentTarget.parentElement;
+                                                    if (parent) {
+                                                        parent.innerHTML = `
+                                                            <div class="w-full h-full bg-gradient-to-br from-fuchsia-900/20 to-purple-900/20 flex items-center justify-center">
+                                                                <div class="text-center p-4">
+                                                                    <div class="text-4xl mb-2">🚀</div>
+                                                                    <span class="text-gray-300 text-lg font-medium">${proyecto.empresa}</span>
+                                                                </div>
+                                                            </div>
+                                                        `;
+                                                    }
+                                                }}
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                            <div className="absolute bottom-4 left-4">
+                                                <span className="text-white text-lg font-medium">{proyecto.empresa}</span>
                                             </div>
                                         </div>
 
-                                        {/* Título */}
                                         <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
                                             {proyecto.titulo}
                                         </h3>
 
-                                        {/* Empresa y período */}
                                         <div className="flex justify-between items-center mb-4">
                                             <span className="text-fuchsia-300 font-medium">{proyecto.empresa}</span>
                                             <span className="text-gray-400 text-sm">{proyecto.periodo}</span>
                                         </div>
 
-                                        {/* Descripción */}
                                         <p className="text-gray-300 text-sm mb-4 line-clamp-3">
                                             {proyecto.descripcion}
                                         </p>
 
-                                        {/* Tecnologías */}
                                         <div className="flex flex-wrap gap-2 mb-4">
                                             {proyecto.tecnologias.map((tech, i) => (
                                                 <span
@@ -247,7 +267,6 @@ const Proyects = () => {
                                             ))}
                                         </div>
 
-                                        {/* Responsabilidades */}
                                         <div className="space-y-2">
                                             <h4 className="text-gray-400 text-sm font-medium">Responsabilidades:</h4>
                                             <ul className="space-y-1">
@@ -261,7 +280,6 @@ const Proyects = () => {
                                         </div>
                                     </div>
 
-                                    {/* Indicador de enlace */}
                                     {proyecto.url && (
                                         <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                             <div className="w-8 h-8 bg-fuchsia-500/20 rounded-full flex items-center justify-center">
@@ -275,7 +293,6 @@ const Proyects = () => {
                             ))}
                         </div>
 
-                        {/* Contador de proyectos */}
                         <div className="flex justify-center mt-12">
                             <div className="flex flex-col items-center gap-2">
                                 <div className="text-gray-400 text-sm font-medium">
@@ -290,7 +307,6 @@ const Proyects = () => {
                 </div>
             </div>
 
-            {/* Footer */}
             <div className="relative z-10 py-6 border-t border-gray-800/50">
                 <div className="max-w-7xl mx-auto px-4 text-center">
                     <p className="text-gray-500 text-sm">

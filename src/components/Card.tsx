@@ -157,20 +157,10 @@ const Card = () => {
             </span>
             </h2>
 
-            {/* Descripción */}
-            <p className="description-text text-gray-200
-                       text-sm xs:text-base sm:text-lg md:text-xl
-                       leading-relaxed sm:leading-loose md:leading-relaxed
-                       mb-6 sm:mb-8 md:mb-10
-                       text-center lg:text-left">
-              Ingeniero de Software enfocado en soluciones escalables.
-              ¡Conéctate o explora mi código!
-            </p>
-
             {/* Enlaces a Redes */}
             <div ref={linksRef} className="space-y-3 sm:space-y-4 md:space-y-5 mb-6 sm:mb-8 md:mb-10">
               <a
-                  href="https://github.com/tu_usuario"
+                  href="https://github.com/x-frank23-x"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="

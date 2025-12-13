@@ -2,6 +2,9 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Link } from "react-router-dom";
 import usePageTransition from "../hooks/usePageTransition";
+import EYPImage from "/E&P.png";
+import InduracksImage from "/Induracks.png";
+import SuperImage from "/super.png";
 
 const Proyectos = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -9,49 +12,64 @@ const Proyectos = () => {
   const proyectoRefs = useRef<(HTMLDivElement | null)[]>([]);
   const { overlayRef, showOverlay, handleTransitionClick } = usePageTransition();
 
-  // Data de proyectos actualizada
   const proyectosData = [
     {
       id: 1,
-      titulo: "E&P Profesionales - Desarrollo Web",
-      imgSrc: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      alt: "Proyecto E&P Profesionales",
-      descripcion: "Remodelación completa del sitio web empresarial con React, Tailwind CSS y EmailJS. Mejora de rendimiento y sistema de contacto.",
-      tecnologias: ["React", "Tailwind CSS", "TypeScript", "EmailJS"],
-      link: "/proyects",
+      titulo: "E&P Profesionales - Remodelación Web",
+      descripcion: "Remodelación completa del sitio web de una empresa nacional de construcción, mejorando la imagen, rendimiento y funcionalidades de contacto.",
+      empresa: "E&P Profesionales",
+      periodo: "Agosto 2024 – Diciembre 2024",
+      url: "https://www.eypprofesionales.com/",
+      tecnologias: ["JavaScript", "React", "Tailwind CSS", "EmailJS"],
+      responsabilidades: [
+        "Rediseño de interfaz para una imagen fresca y llamativa",
+        "Optimización del rendimiento de la página",
+        "Implementación de sistema de contacto por correo electrónico",
+        "Desarrollo de la vista del cliente"
+      ],
+      imagen: EYPImage,
       categoria: "Web Development",
-      empresa: "E&P Profesionales"
+      link: "/proyectos/eyp-profesionales"
     },
     {
       id: 2,
-      titulo: "Induracks - Desarrollo Web Integral",
-      imgSrc: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      alt: "Proyecto Induracks",
-      descripcion: "Desarrollo desde cero de sitio web para empresa de estanterías industriales. Diseño representativo y catálogo de productos.",
-      tecnologias: ["React", "Tailwind CSS", "Framer Motion", "JavaScript"],
-      link: "/proyects",
+      titulo: "Induracks - Desarrollo Web desde Cero",
+      descripcion: "Desarrollo completo de sitio web para empresa de estanterías industriales, representando su identidad corporativa y mostrando sus productos.",
+      empresa: "Induracks",
+      periodo: "Octubre 2025 – Diciembre 2025",
+      url: "https://induracks.com/",
+      tecnologias: ["JavaScript", "React", "Tailwind CSS", "Framer Motion"],
+      responsabilidades: [
+        "Desarrollo del sitio web desde cero",
+        "Creación de estilo representativo de la marca",
+        "Implementación de catálogo de productos",
+        "Animaciones y efectos visuales para mejor experiencia"
+      ],
+      imagen: InduracksImage,
       categoria: "Web Development",
-      empresa: "Induracks"
+      link: "/proyectos/induracks"
     },
     {
       id: 3,
-      titulo: "Supersalud - Automatización",
-      imgSrc: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      alt: "Proyecto Supersalud",
-      descripcion: "Sistema automatizado de inventarios y optimización de flujos de trabajo mediante scripts personalizados en Python.",
+      titulo: "Supersalud - Automatización de Inventarios",
+      descripcion: "Creación de sistema automatizado de inventarios y optimización de flujos de trabajo mediante scripts personalizados.",
+      empresa: "Supersalud",
+      periodo: "2025",
+      url: null,
       tecnologias: ["Python", "Excel", "Automatización"],
-      link: "/proyects",
+      responsabilidades: [
+        "Desarrollo de scripts para automatización de inventarios",
+        "Optimización de flujos de trabajo",
+        "Facilitación de gestión documental",
+        "Automatización de registro de información"
+      ],
+      imagen: SuperImage,
       categoria: "Automatización",
-      empresa: "Supersalud"
-    },
-
+      link: "/proyectos/supersalud"
+    }
   ];
 
-  // Animaciones GSAP
   useEffect(() => {
-    gsap.registerPlugin();
-
-    // Animación de entrada de la sección
     if (sectionRef.current && titleRef.current) {
       const tl = gsap.timeline({
         defaults: { ease: "power3.out" },
@@ -62,14 +80,12 @@ const Proyectos = () => {
         }
       });
 
-      // Animación del título
       tl.fromTo(
           titleRef.current,
           { opacity: 0, y: 30, scale: 0.9 },
           { opacity: 1, y: 0, scale: 1, duration: 0.8 }
       );
 
-      // Animación de las tarjetas
       tl.fromTo(
           proyectoRefs.current,
           {
@@ -89,11 +105,10 @@ const Proyectos = () => {
       );
     }
 
-    // Efectos hover para tarjetas
-    proyectoRefs.current.forEach((card, index) => {
+    proyectoRefs.current.forEach((card) => {
       if (!card) return;
 
-      card.addEventListener("mouseenter", () => {
+      const mouseEnterHandler = () => {
         gsap.to(card, {
           y: -10,
           scale: 1.02,
@@ -101,7 +116,6 @@ const Proyectos = () => {
           ease: "power2.out"
         });
 
-        // Animación de tecnologías
         const techContainer = card.querySelector('.tech-container');
         if (techContainer) {
           gsap.fromTo(
@@ -116,26 +130,25 @@ const Proyectos = () => {
               }
           );
         }
-      });
+      };
 
-      card.addEventListener("mouseleave", () => {
+      const mouseLeaveHandler = () => {
         gsap.to(card, {
           y: 0,
           scale: 1,
           duration: 0.3,
           ease: "power2.out"
         });
-      });
-    });
+      };
 
-    return () => {
-      proyectoRefs.current.forEach(card => {
-        if (card) {
-          card.removeEventListener("mouseenter", () => {});
-          card.removeEventListener("mouseleave", () => {});
-        }
-      });
-    };
+      card.addEventListener("mouseenter", mouseEnterHandler);
+      card.addEventListener("mouseleave", mouseLeaveHandler);
+
+      return () => {
+        card.removeEventListener("mouseenter", mouseEnterHandler);
+        card.removeEventListener("mouseleave", mouseLeaveHandler);
+      };
+    });
   }, []);
 
   const getCategoryColor = (categoria: string) => {
@@ -149,6 +162,7 @@ const Proyectos = () => {
 
   const getTechColor = (tech: string) => {
     const colors: { [key: string]: string } = {
+      "JavaScript": "bg-yellow-900/40 text-yellow-200",
       "React": "bg-blue-900/40 text-blue-200",
       "TypeScript": "bg-blue-800/40 text-blue-200",
       "Tailwind CSS": "bg-teal-900/40 text-teal-200",
@@ -160,15 +174,20 @@ const Proyectos = () => {
       "Framer Motion": "bg-pink-900/40 text-pink-200",
       "EmailJS": "bg-red-900/40 text-red-200",
       "Excel": "bg-green-900/40 text-green-200",
-      "Automatización": "bg-emerald-900/40 text-emerald-200",
-      "JavaScript": "bg-yellow-800/40 text-yellow-200"
+      "Automatización": "bg-emerald-900/40 text-emerald-200"
     };
     return colors[tech] || "bg-gray-800/40 text-gray-200";
   };
 
+  const handleCardClick = (url: string | null, e: React.MouseEvent) => {
+    if (url) {
+      e.preventDefault();
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
       <>
-        {/* Overlay del círculo */}
         {showOverlay && (
             <div
                 ref={overlayRef}
@@ -189,14 +208,12 @@ const Proyectos = () => {
                    bg-gradient-to-b from-black via-gray-950 to-black
                    overflow-hidden"
         >
-          {/* Efectos de fondo */}
           <div className="absolute inset-0">
             <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-cyan-900/10 to-transparent" />
             <div className="absolute bottom-0 right-0 w-full h-1/3 bg-gradient-to-t from-fuchsia-900/10 to-transparent" />
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto">
-            {/* Título */}
             <div className="text-center mb-12 sm:mb-16 md:mb-20">
               <h2
                   ref={titleRef}
@@ -211,8 +228,7 @@ const Proyectos = () => {
               </p>
             </div>
 
-            {/* Grid de proyectos */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
               {proyectosData.map((proyecto, index) => (
                   <article
                       key={proyecto.id}
@@ -223,13 +239,11 @@ const Proyectos = () => {
                          backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8
                          border border-gray-800/50 hover:border-cyan-500/50
                          shadow-xl shadow-black/30 hover:shadow-2xl hover:shadow-cyan-500/10
-                         transition-all duration-300 overflow-hidden"
+                         transition-all duration-300 overflow-hidden cursor-pointer"
                   >
-                    {/* Efecto de brillo al hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent
                               translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
 
-                    {/* Badge de categoría */}
                     <div className="absolute top-4 right-4 z-10">
                   <span className={`px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm font-medium 
                                  border ${getCategoryColor(proyecto.categoria)}`}>
@@ -237,12 +251,11 @@ const Proyectos = () => {
                   </span>
                     </div>
 
-                    {/* Imagen del proyecto */}
                     <div className="relative mb-6 sm:mb-8 overflow-hidden rounded-xl sm:rounded-2xl">
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10" />
                       <img
-                          src={proyecto.imgSrc}
-                          alt={proyecto.alt}
+                          src={proyecto.imagen}
+                          alt={proyecto.empresa}
                           className="w-full h-48 sm:h-56 md:h-64 object-cover rounded-xl sm:rounded-2xl
                              group-hover:scale-105 transition-transform duration-500"
                       />
@@ -251,7 +264,6 @@ const Proyectos = () => {
                       </div>
                     </div>
 
-                    {/* Contenido */}
                     <div className="space-y-4 sm:space-y-6">
                       <div>
                         <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2
@@ -263,7 +275,6 @@ const Proyectos = () => {
                         </p>
                       </div>
 
-                      {/* Tecnologías */}
                       <div className="tech-container flex flex-wrap gap-2">
                         {proyecto.tecnologias.map((tech, i) => (
                             <span
@@ -276,32 +287,49 @@ const Proyectos = () => {
                         ))}
                       </div>
 
-                      {/* Enlace */}
                       <div className="pt-4 border-t border-gray-800/50">
-                        <Link
-                            to={proyecto.link}
-                            onClick={(e) => handleTransitionClick(e, proyecto.link)}
-                            className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300
+                        {proyecto.url ? (
+                            <button
+                                onClick={(e) => handleCardClick(proyecto.url, e)}
+                                className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300
                                font-medium text-sm sm:text-base transition-colors duration-300
                                group/link"
-                        >
-                          <span>Ver detalles del proyecto</span>
-                          <svg
-                              className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
-                        </Link>
+                            >
+                              <span>Visitar sitio web</span>
+                              <svg
+                                  className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                              </svg>
+                            </button>
+                        ) : (
+                            <Link
+                                to={proyecto.link || "#"}
+                                onClick={(e) => proyecto.link ? handleTransitionClick(e, proyecto.link!) : e.preventDefault()}
+                                className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300
+                               font-medium text-sm sm:text-base transition-colors duration-300
+                               group/link"
+                            >
+                              <span>Ver detalles del proyecto</span>
+                              <svg
+                                  className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                              </svg>
+                            </Link>
+                        )}
                       </div>
                     </div>
                   </article>
               ))}
             </div>
 
-            {/* Footer informativo */}
             <div className="mt-12 sm:mt-16 md:mt-20 text-center">
               <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-8
                          bg-gray-900/30 backdrop-blur-sm rounded-2xl p-6 sm:p-8
@@ -318,7 +346,7 @@ const Proyectos = () => {
                 <div className="hidden sm:block h-10 w-px bg-gray-700" />
 
                 <Link
-                    to="/proyectos"
+                    to="/proyects"
                     onClick={(e) => handleTransitionClick(e, "/proyects")}
                     className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-fuchsia-600
                          text-white font-medium rounded-full hover:scale-105

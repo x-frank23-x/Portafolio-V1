@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Link } from "react-router-dom";
-import usePageTransition from "../hooks/usePageTransition"; 
+import usePageTransition from "../hooks/usePageTransition";
 
 const Nav = () => {
   const navRef = useRef<HTMLElement>(null);
@@ -63,15 +63,7 @@ const Nav = () => {
                 Inicio
               </Link>
             </li>
-            <li className="text-gray-300">
-              <Link
-                to="/sobre-mi"
-                onClick={(e) => handleTransitionClick(e, "/sobre-mi")}
-                className="hover:text-white transition-colors cursor-pointer"
-              >
-                Sobre mí
-              </Link>
-            </li>
+
             <li className="text-gray-300">
               <Link
                 to="/proyectos"
@@ -81,15 +73,7 @@ const Nav = () => {
                 Proyectos
               </Link>
             </li>
-            <li className="text-gray-300">
-              <Link
-                to="/contacto"
-                onClick={(e) => handleTransitionClick(e, "/contacto")}
-                className="hover:text-white transition-colors cursor-pointer"
-              >
-                Contacto
-              </Link>
-            </li>
+
           </ul>
         </nav>
       </section>
