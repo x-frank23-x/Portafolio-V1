@@ -1,157 +1,283 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
+interface Noticia {
+  id: number;
+  slug: string;
+  titulo: string;
+  texto: string;
+  imagen: string;
+  fecha: string;
+}
 
-const noticiasData = [
+const noticiasData: Noticia[] = [
   {
     id: 1,
-    titulo: "Aprendiendo Bitbucket y control de versiones",
+    slug: "cobol",
+    titulo: "Aprendiendo COBOL",
     texto:
-        "Durante el trascurso de estas semanas he estado profundizando en el uso de Bitbucket, gestionando repositorios, ramas y flujos de trabajo con Git para proyectos personales.",
-    imagen:
-        "bit.png",
+      "Estoy comenzando a aprender COBOL para ampliar mis conocimientos y entender qué lenguajes antiguos se siguen utilizando en la actualidad.",
+    imagen: "cobol.jpeg",
+    fecha: "2026.06.02"
   },
   {
     id: 2,
-    titulo: "Proyecto Supersalud finalizado",
+    slug: "ucc",
+    titulo: "Proyecto UCC continúa",
     texto:
-        "Finalicé exitosamente el proyecto Supersalud, entregando todo los mantenimientos y inventario completo, las soluciones que se proporciono para la creacion del inventario y formateo de actas fueron del agrado del equipo del proyecto.",
-    imagen:
-        "super.png",
+      "El proyecto de UCC se alargó más tiempo de lo previsto: creé un programa para la generación de actas de mantenimiento y una parte de los tickets, reduciendo este proceso en un 80%. Ahora se evalúa automatizar por completo la generación de tickets y sus reportes.",
+    imagen: "ucc.jpeg",
+    fecha: "2026.06.14"
   },
   {
     id: 3,
-    titulo: "Inicio de octavo cuatrimestre universitario",
+    slug: "uni",
+    titulo: "Inicio de décimo cuatrimestre",
     texto:
-        "Inicié mi octavo cuatrimestre en la universidad, fortaleciendo mis conocimientos en desarrollo de software y consolidando mi perfil como futuro ingeniero de sfotware.",
-    imagen:
-        "uni.png",
+      "Inicié mi décimo cuatrimestre en la universidad, fortaleciendo mis conocimientos en desarrollo de software y consolidando mi perfil como futuro ingeniero de software.",
+    imagen: "uni.png",
+    fecha: "2026.06.20"
   },
   {
     id: 4,
-    titulo: "Aprendiendo Angular y explorando Linux",
+    slug: "arch",
+    titulo: "Configurando Arch Linux",
     texto:
-        "Estoy ampliando mi stack tecnológico aprendiendo Angular y explorando el uso de Linux como sistema principal para desarrollo, buscando optimizar mi flujo de trabajo.",
-    imagen:
-        "angular.jpg",
-  },
+      "Estoy terminando de configurar mi Arch Linux portable; quiero poder hacer pruebas de hardware y también programar si es requerido en proyectos.",
+    imagen: "arch.png",
+    fecha: "2026.07.01"
+  }
 ];
 
+const AUTOPLAY_MS = 6500;
+
 const Noticias = () => {
-  const carruselRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const tweenRef = useRef<gsap.core.Tween | null>(null);
+  const isAnimatingRef = useRef(false);
+  const touchStartX = useRef<number | null>(null);
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const totalItems = noticiasData.length;
+  const [isPaused, setIsPaused] = useState(false);
 
-  // --- Función para la animación de transición ---
-  const animateCarousel = useCallback((index: number) => {
-    if (carruselRef.current) {
-      // Calcula el desplazamiento: (índice * 100%)
-      const xOffset = -index * 100;
+  const total = noticiasData.length;
 
-      gsap.to(carruselRef.current, {
-        x: `${xOffset}%`, // Anima la propiedad 'x' (translateX)
-        duration: 0.6,
-        ease: "power2.out", // Transición suave y rápida
-      });
-    }
-  }, []);
+  const goToSlide = useCallback(
+    (index: number) => {
+      if (isAnimatingRef.current) return;
+      setCurrentIndex(((index % total) + total) % total);
+    },
+    [total]
+  );
 
-  // --- Handlers de Navegación ---
+  const handleNext = useCallback(
+    () => goToSlide(currentIndex + 1),
+    [currentIndex, goToSlide]
+  );
+  const handlePrev = useCallback(
+    () => goToSlide(currentIndex - 1),
+    [currentIndex, goToSlide]
+  );
 
-  const handleNext = () => {
-    const nextIndex = (currentIndex + 1) % totalItems;
-    setCurrentIndex(nextIndex);
-    animateCarousel(nextIndex);
-  };
-
-  const handlePrev = () => {
-    const prevIndex = (currentIndex - 1 + totalItems) % totalItems;
-    setCurrentIndex(prevIndex);
-    animateCarousel(prevIndex);
-  };
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index);
-    animateCarousel(index);
-  };
-
-  // Efecto para la carga inicial (si quieres una animación)
+  // Slide track
   useEffect(() => {
-    // Inicializa la posición a 0 al cargar
-    gsap.set(carruselRef.current, { x: 0 });
-  }, []);
+    if (!trackRef.current) return;
+    isAnimatingRef.current = true;
+    tweenRef.current?.kill();
+    tweenRef.current = gsap.to(trackRef.current, {
+      xPercent: -currentIndex * 100,
+      duration: 0.65,
+      ease: "power3.out",
+      onComplete: () => {
+        isAnimatingRef.current = false;
+      }
+    });
+    return () => {
+      tweenRef.current?.kill();
+    };
+  }, [currentIndex]);
 
+  // Progress bar (buffer style)
+  useEffect(() => {
+    if (!progressRef.current) return;
+    gsap.fromTo(
+      progressRef.current,
+      { scaleX: 0 },
+      {
+        scaleX: 1,
+        duration: isPaused ? 999 : AUTOPLAY_MS / 1000,
+        ease: "none",
+        transformOrigin: "left center"
+      }
+    );
+  }, [currentIndex, isPaused]);
+
+  // Autoplay
+  useEffect(() => {
+    if (isPaused) return;
+    const id = window.setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % total);
+    }, AUTOPLAY_MS);
+    return () => window.clearInterval(id);
+  }, [isPaused, total]);
+
+  // Teclado
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") handleNext();
+      if (e.key === "ArrowLeft") handlePrev();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [handleNext, handlePrev]);
+
+  // Swipe táctil
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (delta > 50) handlePrev();
+    else if (delta < -50) handleNext();
+    touchStartX.current = null;
+  };
 
   return (
-    <section className="p-8 min-h-max">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-4xl font-extrabold mb-8 text-cyan-400 text-center">
-          Últimas Novedades
-        </h2>
+    <section
+      className="w-screen relative left-1/2 right-1/2 mx-[-50vw] bg-[#02172c] text-[#c9d1d9] py-16 md:py-24"
+      style={{ fontFamily: "'JetBrains Mono', monospace" }}
+    >
+      {/* Header tipo bitácora */}
+      <div className="max-w-6xl mx-auto px-6 md:px-12 mb-10 flex items-baseline justify-between border-b border-white/10 pb-4">
+        <div className="flex items-baseline gap-3">
+          <span className="text-[#7ee3c8] text-sm tracking-widest">$</span>
+          <h2 className="text-xl md:text-2xl font-medium tracking-tight text-white">
+            tail -f /var/log/novedades
+          </h2>
+          <span className="text-[#7ee3c8] animate-pulse text-xl leading-none">
+            _
+          </span>
+        </div>
+        <span className="hidden md:block text-xs text-white/30 tracking-wider">
+          {String(currentIndex + 1).padStart(2, "0")} /{" "}
+          {String(total).padStart(2, "0")}
+        </span>
+      </div>
 
-        {/* --- Contenedor Principal del Carrusel --- */}
-        <div className="relative overflow-hidden rounded-xl shadow-2xl ">
-
-          {/* 1. Track de Elementos: Animado por GSAP */}
+      {/* Barra de progreso (buffer) */}
+      <div className="max-w-6xl mx-auto px-6 md:px-12 mb-8">
+        <div className="h-0.5 w-full bg-white/10 overflow-hidden">
           <div
-            ref={carruselRef}
-            className="flex w-full"
-            style={{ width: `${totalItems * 100}%` }} // Asegura que el ancho es suficiente para todos los slides
-          >
-            {noticiasData.map((noticia) => (
-              <div key={noticia.id} className="w-full flex-shrink-0 p-6 md:p-8">
-                <article className="flex flex-col md:flex-row gap-6 items-center">
+            key={currentIndex}
+            ref={progressRef}
+            className="h-full bg-[#7ee3c8] origin-left"
+          />
+        </div>
+      </div>
+
+      {/* Carrusel full-width */}
+      <div
+        className="relative overflow-hidden"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onFocus={() => setIsPaused(true)}
+        onBlur={() => setIsPaused(false)}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        role="region"
+        aria-roledescription="carrusel"
+        aria-label="Últimas novedades"
+      >
+        <div ref={trackRef} className="flex w-full will-change-transform">
+          {noticiasData.map((noticia, index) => (
+            <div
+              key={noticia.id}
+              className="w-full shrink-0 grow-0"
+              aria-hidden={index !== currentIndex}
+            >
+              <article className="max-w-6xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
+                {/* Gutter tipo editor de código */}
+                <div className="md:col-span-1 hidden md:flex flex-col items-start text-white/25 text-xs tracking-widest select-none">
+                  <span className="text-[#7ee3c8]">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="mt-2 [writing-mode:vertical-rl] rotate-180">
+                    {noticia.fecha}
+                  </span>
+                </div>
+
+                <div className="md:col-span-5">
                   <img
                     src={noticia.imagen}
                     alt={noticia.titulo}
-                    className="w-96 md:w-96 h-auto object-cover rounded-lg shadow-lg "
+                    className="w-full h-56 md:h-72 object-cover grayscale-15 contrast-110"
+                    loading={index === 0 ? "eager" : "lazy"}
+                    decoding="async"
                   />
-                  <div className="w-96 text-gray-200">
-                    <h3 className="text-3xl font-bold mb-3 text-cyan-400">
-                      {noticia.titulo}
-                    </h3>
-                    <p className="text-lg leading-relaxed ">{noticia.texto}</p>
-                    <button className="mt-4 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 transition-colors text-white font-semibold rounded-md shadow-md">
-                      Leer más
-                    </button>
-                  </div>
-                </article>
-              </div>
-            ))}
-          </div>
+                </div>
 
-          {/* 2. Controles de Navegación (Flechas) */}
+                <div
+                  className="md:col-span-6"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                >
+                  <span
+                    className="md:hidden inline-block mb-2 text-[#7ee3c8] text-xs tracking-widest"
+                    style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  >
+                    {String(index + 1).padStart(2, "0")} · {noticia.fecha}
+                  </span>
+                  <h3
+                    className="text-2xl md:text-4xl font-medium mb-4 text-white tracking-tight"
+                    style={{ fontFamily: "'JetBrains Mono', monospace" }}
+                  >
+                    {noticia.titulo}
+                  </h3>
+                  <p className="text-base md:text-lg leading-relaxed text-[#c9d1d9]/80">
+                    {noticia.texto}
+                  </p>
+                </div>
+              </article>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Navegación: lista de índice, no dots */}
+      <div className="max-w-6xl mx-auto px-6 md:px-12 mt-10 flex items-center justify-between border-t border-white/10 pt-6">
+        <div className="flex gap-1">
+          {noticiasData.map((noticia, index) => (
+            <button
+              key={noticia.id}
+              onClick={() => goToSlide(index)}
+              className={`px-3 py-1.5 text-xs tracking-wider transition-colors duration-200 border ${
+                index === currentIndex
+                  ? "border-[#7ee3c8] text-[#7ee3c8]"
+                  : "border-white/10 text-white/35 hover:text-white/60 hover:border-white/25"
+              }`}
+              aria-current={index === currentIndex ? "true" : "false"}
+            >
+              {noticia.slug}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex gap-2">
           <button
             onClick={handlePrev}
-            className="absolute top-1/2 left-4 transform -translate-y-1/2 p-3 bg-gray-900/60 text-cyan-400 rounded-full hover:bg-gray-700/80 transition-all z-20"
-            aria-label="Noticia Anterior"
+            className="w-9 h-9 flex items-center justify-center border border-white/15 text-white/60 hover:border-[#7ee3c8] hover:text-[#7ee3c8] transition-colors duration-200"
+            aria-label="Anterior"
           >
-            <FaChevronLeft size={24} />
+            ←
           </button>
           <button
             onClick={handleNext}
-            className="absolute top-1/2 right-4 transform -translate-y-1/2 p-3 bg-gray-900/60 text-cyan-400 rounded-full hover:bg-gray-700/80 transition-all z-20"
-            aria-label="Noticia Siguiente"
+            className="w-9 h-9 flex items-center justify-center border border-white/15 text-white/60 hover:border-[#7ee3c8] hover:text-[#7ee3c8] transition-colors duration-200"
+            aria-label="Siguiente"
           >
-            <FaChevronRight size={24} />
+            →
           </button>
-        </div>
-
-        {/* 3. Indicadores de Posición (Dots) */}
-        <div className="flex justify-center gap-2 mt-6">
-          {noticiasData.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                index === currentIndex 
-                    ? 'bg-cyan-400 scale-125 shadow-md' // Dot activo
-                    : 'bg-gray-600 hover:bg-gray-400' // Dot inactivo
-              }`}
-              aria-label={`Ir a la noticia ${index + 1}`}
-            />
-          ))}
         </div>
       </div>
     </section>
